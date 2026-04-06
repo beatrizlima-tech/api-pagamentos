@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+
+  redis:
+    image: redis:7
+    container_name: api-pagamentos-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - api-pagamentos-network
+    restart: always
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: api-pagamentos-redis-ui
+    ports:
+      - "8082:8081"
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    depends_on:
+      - redis
+    networks:
+      - api-pagamentos-network
+    restart: always
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: api-pagamentos-mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - api-pagamentos-network
+    restart: always
+
+volumes:
+  redis_data:
+
+networks:
+  api-pagamentos-network:
+    driver: bridge
