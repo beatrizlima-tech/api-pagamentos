@@ -1,61 +1,72 @@
 # 💳 API de Pagamentos
 
-API REST desenvolvida com Java 21 e Spring Boot para processamento de pagamentos, armazenamento de pedidos em Redis e envio automático de comprovantes por e-mail.
+API REST desenvolvida com Spring Boot para captura de pagamentos, armazenamento temporário de pedidos no Redis e envio automático de comprovantes por e-mail.
 
 ## 🚀 Tecnologias Utilizadas
 
 * Java 21
-* Spring Boot 4
-* Spring MVC
-* Redis
-* Spring Mail
-* Lombok
-* Swagger / OpenAPI
+* Spring Boot
 * Maven
+* Redis
+* Swagger / OpenAPI
+* MailHog
+* Lombok
 
-## 📌 Funcionalidades
+---
 
-* Captura de pagamentos via API REST
+## 📋 Funcionalidades
+
+* Cadastro de pagamentos via API REST
 * Armazenamento de pedidos no Redis
-* Envio automático de comprovante por e-mail
-* Documentação interativa com Swagger
-* Integração com aplicações frontend através de CORS
+* Geração de comprovante de pagamento
+* Envio automático de e-mail HTML
+* Documentação automática com Swagger
+* Configuração de CORS para integração com aplicações frontend
 
-## 🏗️ Arquitetura
+---
+
+## 📂 Estrutura do Projeto
 
 ```text
-src/main/java
-│
-├── controllers
-│   └── PagamentosController
-│
-├── services
-│   └── PedidoService
-│
+src
 ├── components
 │   └── EmailComponent
-│
+├── configurations
+│   ├── CorsConfiguration
+│   ├── RedisConfiguration
+│   └── SwaggerConfiguration
+├── controllers
+│   └── PagamentosController
 ├── dtos
 │   ├── ClienteDTO
 │   ├── ProdutoDTO
 │   ├── ItemPedidoDTO
 │   └── PedidoDTO
-│
-└── configurations
-    ├── CorsConfiguration
-    ├── RedisConfiguration
-    └── SwaggerConfiguration
+└── services
+    └── PedidoService
 ```
 
-## 📖 Endpoint Principal
+---
 
-### Criar Pagamento
+## 🔄 Fluxo da Aplicação
+
+1. O cliente envia um pedido para a API.
+2. O pagamento é processado.
+3. Os dados do pedido são armazenados no Redis.
+4. Um comprovante em HTML é gerado.
+5. O comprovante é enviado por e-mail ao cliente.
+
+---
+
+## 📌 Endpoint Disponível
+
+### Criar pagamento
 
 ```http
 POST /api/v1/pagamentos/criar
 ```
 
-### Exemplo de Requisição
+### Exemplo de requisição
 
 ```json
 {
@@ -65,15 +76,15 @@ POST /api/v1/pagamentos/criar
     "nome": "Maria Silva",
     "email": "maria@email.com"
   },
-  "dataHora": "2026-06-21T10:30:00",
-  "valor": 199.90,
+  "dataHora": "2025-06-20T15:30:00",
+  "valor": 250.00,
   "itensPedido": [
     {
-      "id": "1",
+      "id": "ITEM001",
       "produto": {
         "id": "PROD001",
         "nome": "Notebook",
-        "preco": 199.90
+        "preco": 250.00
       },
       "quantidade": 1
     }
@@ -81,79 +92,58 @@ POST /api/v1/pagamentos/criar
 }
 ```
 
-### Resposta de Sucesso
+### Resposta
 
 ```text
 Pagamento capturado com sucesso!
 ```
 
-## 📧 Comprovante por E-mail
+---
 
-Após o processamento do pagamento, a aplicação envia automaticamente um e-mail HTML contendo:
+## 📧 Envio de E-mail
+
+Após a captura do pagamento, a aplicação envia automaticamente um comprovante contendo:
 
 * Dados do cliente
-* Número do pedido
+* Identificação do pedido
 * Data da compra
 * Valor total
 * Lista de produtos
-* Quantidade e subtotal de cada item
+* Quantidade adquirida
+* Subtotal de cada item
 
-## 📦 Persistência
+---
 
-Os pedidos são armazenados no Redis utilizando a chave:
+## 📖 Swagger
 
-```text
-pedido:{id}
-```
-
-Exemplo:
+A documentação da API pode ser acessada após iniciar a aplicação:
 
 ```text
-pedido:PED001
+http://localhost:8080/swagger-ui.html
 ```
 
-## 📚 Documentação Swagger
-
-Após iniciar a aplicação:
-
-```text
-http://localhost:8080/swagger-ui/index.html
-```
+---
 
 ## ⚙️ Pré-requisitos
 
 * Java 21+
 * Maven
-* Redis Server
-* MailHog ou servidor SMTP configurado
+* Redis
+* MailHog
+
+---
 
 ## ▶️ Executando o Projeto
 
-Clone o repositório:
-
 ```bash
-git clone https://github.com/beatrizlima-tech/api-pagamentos.git
-```
-
-Acesse a pasta:
-
-```bash
-cd api-pagamentos
-```
-
-Execute:
-
-```bash
+mvn clean install
 mvn spring-boot:run
 ```
 
-## 🎯 Objetivo do Projeto
+---
 
-Projeto desenvolvido para prática de desenvolvimento backend utilizando Spring Boot, Redis e integração de serviços de e-mail, simulando o fluxo de processamento de pagamentos em aplicações corporativas.
-
-## 👩‍💻 Desenvolvedora
+## 👩‍💻 Autora
 
 Beatriz Lima
 
-GitHub:
-https://github.com/beatrizlima-tech
+Desenvolvedora Java Full Stack em formação, com foco em desenvolvimento backend utilizando Java, Spring Boot, APIs REST e bancos de dados.
