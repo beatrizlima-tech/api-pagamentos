@@ -1,122 +1,148 @@
-# 💳 API de Pagamentos
+# 💳 API Pagamentos
 
-API REST desenvolvida com Spring Boot para captura de pagamentos, armazenamento temporário de pedidos no Redis e envio automático de comprovantes por e-mail.
-
-## 🚀 Tecnologias Utilizadas
-
-* Java 21
-* Spring Boot
-* Maven
-* Redis
-* Swagger / OpenAPI
-* MailHog
-* Lombok
+![Java](https://img.shields.io/badge/Java-21-red?style=for-the-badge\&logo=openjdk)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.x-green?style=for-the-badge\&logo=springboot)
+![Redis](https://img.shields.io/badge/Redis-Database-DC382D?style=for-the-badge\&logo=redis)
+![RabbitMQ](https://img.shields.io/badge/RabbitMQ-Messaging-FF6600?style=for-the-badge\&logo=rabbitmq)
+![Swagger](https://img.shields.io/badge/Swagger-OpenAPI-85EA2D?style=for-the-badge\&logo=swagger)
+![License](https://img.shields.io/badge/license-MIT-lightgrey?style=for-the-badge)
 
 ---
 
-## 📋 Funcionalidades
+# 📌 Sobre o projeto
 
-* Cadastro de pagamentos via API REST
-* Armazenamento de pedidos no Redis
-* Geração de comprovante de pagamento
-* Envio automático de e-mail HTML
-* Documentação automática com Swagger
+A **API Pagamentos** é uma aplicação backend desenvolvida com **Java** e **Spring Boot** responsável pelo processamento de pagamentos em uma arquitetura baseada em microsserviços.
+
+Após receber um pedido, a aplicação registra as informações no **Redis**, gera um comprovante em HTML e envia automaticamente um e-mail ao cliente, simulando o fluxo de confirmação de pagamento utilizado em sistemas reais.
+
+Este projeto faz parte de um ecossistema composto pela **API Pedidos**, demonstrando integração entre serviços por meio de mensageria.
+
+---
+
+# 🚀 Funcionalidades
+
+* Recebimento de pedidos via API REST
+* Processamento de pagamentos
+* Armazenamento temporário dos pedidos no Redis
+* Geração automática de comprovante em HTML
+* Envio de comprovante por e-mail
+* Documentação da API com Swagger/OpenAPI
 * Configuração de CORS para integração com aplicações frontend
 
 ---
 
-## 📂 Estrutura do Projeto
+# 🧱 Tecnologias Utilizadas
+
+* Java 21
+* Spring Boot
+* Spring Web MVC
+* Redis
+* RabbitMQ
+* Spring Mail
+* Swagger / OpenAPI
+* Lombok
+* Maven
+
+---
+
+# 🏗️ Estrutura do Projeto
 
 ```text
-src
+src/main/java/
+
 ├── components
 │   └── EmailComponent
+│
 ├── configurations
 │   ├── CorsConfiguration
 │   ├── RedisConfiguration
 │   └── SwaggerConfiguration
+│
 ├── controllers
 │   └── PagamentosController
+│
 ├── dtos
 │   ├── ClienteDTO
 │   ├── ProdutoDTO
 │   ├── ItemPedidoDTO
 │   └── PedidoDTO
+│
 └── services
     └── PedidoService
 ```
 
 ---
 
-## 🔄 Fluxo da Aplicação
-
-1. O cliente envia um pedido para a API.
-2. O pagamento é processado.
-3. Os dados do pedido são armazenados no Redis.
-4. Um comprovante em HTML é gerado.
-5. O comprovante é enviado por e-mail ao cliente.
-
----
-
-## 📌 Endpoint Disponível
-
-### Criar pagamento
-
-```http
-POST /api/v1/pagamentos/criar
-```
-
-### Exemplo de requisição
-
-```json
-{
-  "id": "PED001",
-  "cliente": {
-    "id": "CLI001",
-    "nome": "Maria Silva",
-    "email": "maria@email.com"
-  },
-  "dataHora": "2025-06-20T15:30:00",
-  "valor": 250.00,
-  "itensPedido": [
-    {
-      "id": "ITEM001",
-      "produto": {
-        "id": "PROD001",
-        "nome": "Notebook",
-        "preco": 250.00
-      },
-      "quantidade": 1
-    }
-  ]
-}
-```
-
-### Resposta
+# 🔄 Fluxo da Aplicação
 
 ```text
-Pagamento capturado com sucesso!
+API Pedidos
+      │
+      ▼
+API Pagamentos
+      │
+      ▼
+Redis
+      │
+      ▼
+Geração do comprovante
+      │
+      ▼
+Envio de e-mail
 ```
 
 ---
 
-## 📧 Envio de E-mail
+# 🔗 Endpoint
 
-Após a captura do pagamento, a aplicação envia automaticamente um comprovante contendo:
-
-* Dados do cliente
-* Identificação do pedido
-* Data da compra
-* Valor total
-* Lista de produtos
-* Quantidade adquirida
-* Subtotal de cada item
+| Método | Endpoint                   | Descrição           |
+| ------ | -------------------------- | ------------------- |
+| POST   | `/api/v1/pagamentos/criar` | Processar pagamento |
 
 ---
 
-## 📖 Swagger
+# 📧 Recursos Implementados
 
-A documentação da API pode ser acessada após iniciar a aplicação:
+Após o processamento do pagamento, a aplicação:
+
+* Armazena os dados do pedido no Redis
+* Gera automaticamente um comprovante em HTML
+* Envia um e-mail contendo:
+
+  * Dados do cliente
+  * Número do pedido
+  * Data da compra
+  * Produtos adquiridos
+  * Quantidade
+  * Valor total
+
+---
+
+# ⚙️ Como Executar
+
+## 1. Clone o repositório
+
+```bash
+git clone https://github.com/beatrizlima-tech/api-pagamentos.git
+```
+
+## 2. Inicie os serviços necessários
+
+* Redis
+* RabbitMQ
+* MailHog
+
+## 3. Execute a aplicação
+
+```bash
+mvn spring-boot:run
+```
+
+---
+
+# 📖 Documentação
+
+Após iniciar a aplicação:
 
 ```text
 http://localhost:8080/swagger-ui.html
@@ -124,26 +150,38 @@ http://localhost:8080/swagger-ui.html
 
 ---
 
-## ⚙️ Pré-requisitos
+# 📚 Conceitos Aplicados
 
-* Java 21+
-* Maven
+* Programação Orientada a Objetos
+* Microsserviços
+* API REST
+* Comunicação entre serviços
+* RabbitMQ
 * Redis
-* MailHog
+* Envio de e-mails
+* Spring Mail
+* Swagger/OpenAPI
+* Arquitetura em Camadas
 
 ---
 
-## ▶️ Executando o Projeto
+# 📌 Melhorias Futuras
 
-```bash
-mvn clean install
-mvn spring-boot:run
-```
+* Persistência definitiva dos pagamentos em banco de dados
+* Integração com gateway de pagamento
+* Histórico de transações
+* Tratamento global de exceções
+* Testes automatizados
+* Dockerização da aplicação
 
 ---
 
-## 👩‍💻 Autora
+# 👩‍💻 Autora
 
-Beatriz Lima
+Desenvolvido por **Beatriz Lima**
 
-Desenvolvedora Java Full Stack em formação, com foco em desenvolvimento backend utilizando Java, Spring Boot, APIs REST e bancos de dados.
+🔗 GitHub
+https://github.com/beatrizlima-tech
+
+💼 LinkedIn
+https://www.linkedin.com/in/beatrizlima-tech
